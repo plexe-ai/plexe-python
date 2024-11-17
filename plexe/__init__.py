@@ -1,28 +1,65 @@
-from .client import PlexeClient
+from pathlib import Path
+from typing import Optional, Union, List
+from .client import PlexeAI
 
-def create(task_description: str, api_key: str = "") -> tuple[str, int, str]:
-    """Create a new ML model."""
-    client = PlexeClient(api_key=api_key)
-    return client.create(task_description=task_description)
+def build(goal: str,
+          data_files: Optional[Union[str, Path, List[Union[str, Path]]]] = None,
+          data_dir: Optional[str] = None,
+          api_key: str = "", 
+          steps: int = 5, 
+          eval_criteria: Optional[str] = None) -> str:
+    """Build a new ML model.
+    
+    Args:
+        goal: Description of what the model should do
+        data_files: Optional path(s) to data file(s) to upload
+        data_dir: Optional data directory (if files already uploaded)
+        api_key: API key for authentication
+        steps: Number of improvement iterations
+        eval_criteria: Optional evaluation criteria
+        
+    Returns:
+        experiment_id: ID of the created experiment
+    """
+    client = PlexeAI(api_key=api_key)
+    return client.build(goal=goal, data_files=data_files, data_dir=data_dir,
+                       steps=steps, eval_criteria=eval_criteria)
 
-async def acreate(task_description: str, api_key: str = "") -> tuple[str, int, str]:
-    """Create a new ML model asynchronously."""
-    client = PlexeClient(api_key=api_key)
-    return await client.acreate(task_description=task_description)
+async def abuild(goal: str,
+                data_files: Optional[Union[str, Path, List[Union[str, Path]]]] = None,
+                data_dir: Optional[str] = None,
+                api_key: str = "", 
+                steps: int = 5, 
+                eval_criteria: Optional[str] = None) -> str:
+    """Build a new ML model asynchronously."""
+    client = PlexeAI(api_key=api_key)
+    return await client.abuild(goal=goal, data_files=data_files, data_dir=data_dir,
+                             steps=steps, eval_criteria=eval_criteria)
 
-def run(model_id: str, text_input: str = "", version: int = -1, api_key: str = "") -> dict:
-    """Run predictions using a model."""
-    client = PlexeClient(api_key=api_key)
-    return client.run(model_id=model_id, text_input=text_input, version=version)
+def infer(experiment_id: str, input_data: dict, api_key: str = "") -> dict:
+    """Run inference using a built model."""
+    client = PlexeAI(api_key=api_key)
+    return client.infer(experiment_id=experiment_id, input_data=input_data)
 
-async def arun(model_id: str, text_input: str = "", version: int = -1, api_key: str = "") -> dict:
-    """Run predictions using a model asynchronously."""
-    client = PlexeClient(api_key=api_key)
-    return await client.arun(model_id=model_id, text_input=text_input, version=version)
+async def ainfer(experiment_id: str, input_data: dict, api_key: str = "") -> dict:
+    """Run inference using a model asynchronously."""
+    client = PlexeAI(api_key=api_key)
+    return await client.ainfer(experiment_id=experiment_id, input_data=input_data)
 
-def batch_run(model_id: str, inputs: list, version: int = -1, api_key: str = "") -> list:
+def batch_infer(experiment_id: str, inputs: List[dict], api_key: str = "") -> List[dict]:
     """Run batch predictions."""
-    client = PlexeClient(api_key=api_key)
-    return client.batch_run(model_id=model_id, inputs=inputs, version=version)
+    client = PlexeAI(api_key=api_key)
+    return client.batch_infer(experiment_id=experiment_id, inputs=inputs)
 
-__all__ = ['PlexeClient', 'create', 'acreate', 'run', 'arun', 'batch_run']
+def get_status(experiment_id: str, api_key: str = "") -> dict:
+    """Get status of an experiment build."""
+    client = PlexeAI(api_key=api_key)
+    return client.get_status(experiment_id=experiment_id)
+
+async def aget_status(experiment_id: str, api_key: str = "") -> dict:
+    """Get status of an experiment build asynchronously."""
+    client = PlexeAI(api_key=api_key)
+    return await client.aget_status(experiment_id=experiment_id)
+
+__all__ = ['PlexeAI', 'build', 'abuild', 'infer', 'ainfer', 
+           'batch_infer', 'get_status', 'aget_status']
