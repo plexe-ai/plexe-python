@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "plexe"
-version = "0.1.2"
+version = "0.1.3"
 description = "Create ML models from natural language descriptions"
 readme = "README.md"
 requires-python = ">=3.7"

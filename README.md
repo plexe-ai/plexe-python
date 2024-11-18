@@ -3,7 +3,7 @@
 # PlexeAI
 
 
-<img src="docs/img/plexe-logo.svg" alt="PlexeAI Logo" width="100" height="100"/>
+<img src="https://private-user-images.githubusercontent.com/181162356/387419556-420e9240-74fe-402b-a7fb-63ae0b0cc2a5.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzE5NzEzNjgsIm5iZiI6MTczMTk3MTA2OCwicGF0aCI6Ii8xODExNjIzNTYvMzg3NDE5NTU2LTQyMGU5MjQwLTc0ZmUtNDAyYi1hN2ZiLTYzYWUwYjBjYzJhNS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQxMTE4JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MTExOFQyMzA0MjhaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1kM2QyY2QxZmY0ODY1ZGY2ZjkzMjhkMzIxZTg3NWIxOGEwYzFiMDAzMjQwYWQ1MjY2MWM4Y2M3NDc4NDQ4NjZjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.l5yUFl8v4OSO9Gyw8gykQhDF3GQVROSJAROkA28GdnU" alt="PlexeAI Logo" width="100" height="100"/>
 
 ### Create ML models from natural language descriptions
 
