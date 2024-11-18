@@ -2,7 +2,8 @@
 
 # PlexeAI
 
-<img src="docs/img/plexe-logo.svg" alt="PlexeAI Logo" width="100" height="100"/>
+
+<img src="https://github.com/user-attachments/assets/872e6705-8b9c-4602-940b-2dfba19fe250" alt="PlexeAI Logo" width="100" height="100"/>
 
 ### Create ML models from natural language descriptions
 
