@@ -12,14 +12,14 @@ class PlexeAI:
             if not self.api_key:
                 raise ValueError("PLEXE_API_KEY must be provided or set as environment variable")
 
-        self.base_url = "https://zet1g61p2k.execute-api.eu-west-2.amazonaws.com"
+        self.base_url = "https://api.plexe.ai/v0"
         self.client = httpx.Client(timeout=timeout)
         self.async_client = httpx.AsyncClient(timeout=timeout)
 
     def _get_headers(self) -> Dict[str, str]:
         """Get basic headers with API key."""
         return {
-            "X-API-Key": self.api_key or "",
+            "x-api-key": self.api_key or "", 
         }
 
     def _get_json_headers(self) -> Dict[str, str]:
@@ -38,7 +38,6 @@ class PlexeAI:
         """Upload data files and return upload ID."""
         files = self._ensure_list(data_files)
         
-        # Prepare files for upload
         upload_files = []
         for f in files:
             if not f.exists():
@@ -46,9 +45,9 @@ class PlexeAI:
             upload_files.append(('files', (f.name, open(f, 'rb'))))
 
         response = self.client.post(
-            f"{self.base_url}/upload",
+            f"{self.base_url}/uploads",
             files=upload_files,
-            headers=self._get_headers()  # Don't set Content-Type for multipart/form-data
+            headers=self._get_headers()
         )
         response.raise_for_status()
         return response.json()["upload_id"]
@@ -64,128 +63,126 @@ class PlexeAI:
             upload_files.append(('files', (f.name, open(f, 'rb'))))
 
         response = await self.async_client.post(
-            f"{self.base_url}/upload",
+            f"{self.base_url}/uploads",
             files=upload_files,
             headers=self._get_headers()
         )
         response.raise_for_status()
         return response.json()["upload_id"]
 
-    def build(self, goal: str, 
+    def build(self, 
+            goal: str,
+            model_name: str,
             data_files: Optional[Union[str, Path, List[Union[str, Path]]]] = None,
-            data_dir: Optional[str] = None,
-            steps: int = 5, 
+            upload_id: Optional[str] = None,
             eval_criteria: Optional[str] = None) -> str:
         """Build a new ML model.
         
         Args:
             goal: Description of what the model should do
+            model_name: Name for the model
             data_files: Optional path(s) to data file(s) to upload
-            data_dir: Optional data directory (if files already uploaded)
-            steps: Number of improvement iterations
+            upload_id: Optional upload_id if files were already uploaded
             eval_criteria: Optional evaluation criteria
             
         Returns:
-            experiment_id: ID of the created experiment
+            model_version: Version ID of the created model
         """
-        if data_files is None and data_dir is None:
-            raise ValueError("Either data_files or data_dir must be provided")
+        if data_files is None and upload_id is None:
+            raise ValueError("Either data_files or upload_id must be provided")
             
-        if data_files is not None and data_dir is not None:
-            raise ValueError("Cannot provide both data_files and data_dir")
+        if data_files is not None and upload_id is not None:
+            raise ValueError("Cannot provide both data_files and upload_id")
             
-        # Get data directory - either from upload or use provided
+        # Get upload ID - either from new upload or use provided
         if data_files is not None:
             upload_id = self.upload_files(data_files)
-            data_dir = f"data/{upload_id}"
         
-        # Create experiment
+        # Create model
         response = self.client.post(
-            f"{self.base_url}/experiments",
+            f"{self.base_url}/models/{model_name}/create",
             json={
-                "data_dir": data_dir,
+                "upload_id": upload_id,
                 "goal": goal,
-                "eval": eval_criteria,
-                "steps": steps
+                "eval": eval_criteria
             },
             headers=self._get_json_headers()
         )
         response.raise_for_status()
-        return response.json()["job_id"]
+        return response.json()["model_version"]
 
-    async def abuild(self, goal: str,
+    async def abuild(self,
+                    goal: str,
+                    model_name: str,
                     data_files: Optional[Union[str, Path, List[Union[str, Path]]]] = None,
-                    data_dir: Optional[str] = None,
-                    steps: int = 5, 
+                    upload_id: Optional[str] = None,
                     eval_criteria: Optional[str] = None) -> str:
         """Async version of build()"""
-        if data_files is None and data_dir is None:
-            raise ValueError("Either data_files or data_dir must be provided")
+        if data_files is None and upload_id is None:
+            raise ValueError("Either data_files or upload_id must be provided")
             
-        if data_files is not None and data_dir is not None:
-            raise ValueError("Cannot provide both data_files and data_dir")
+        if data_files is not None and upload_id is not None:
+            raise ValueError("Cannot provide both data_files and upload_id")
         
-        # Get data directory - either from upload or use provided
+        # Get upload ID - either from new upload or use provided
         if data_files is not None:
             upload_id = await self.aupload_files(data_files)
-            data_dir = f"data/{upload_id}"
         
         response = await self.async_client.post(
-            f"{self.base_url}/experiments",
+            f"{self.base_url}/models/{model_name}/create",
             json={
-                "data_dir": data_dir,
+                "upload_id": upload_id,
                 "goal": goal,
-                "eval": eval_criteria,
-                "steps": steps
+                "eval": eval_criteria
             },
             headers=self._get_json_headers()
         )
         response.raise_for_status()
-        return response.json()["job_id"]
+        return response.json()["model_version"]
 
-    def get_status(self, experiment_id: str) -> Dict[str, Any]:
-        """Get status of an experiment build."""
+    def get_status(self, model_name: str, model_version: str) -> Dict[str, Any]:
+        """Get status of a model build."""
         response = self.client.get(
-            f"{self.base_url}/experiments/{experiment_id}/status",
+            f"{self.base_url}/models/{model_name}/{model_version}/status",
             headers=self._get_headers()
         )
         response.raise_for_status()
         return response.json()
 
-    async def aget_status(self, experiment_id: str) -> Dict[str, Any]:
+    async def aget_status(self, model_name: str, model_version: str) -> Dict[str, Any]:
         """Async version of get_status()"""
         response = await self.async_client.get(
-            f"{self.base_url}/experiments/{experiment_id}/status",
+            f"{self.base_url}/models/{model_name}/{model_version}/status",
             headers=self._get_headers()
         )
         response.raise_for_status()
         return response.json()
 
-    def infer(self, experiment_id: str, input_data: dict) -> Dict[str, Any]:
+    def infer(self, model_name: str, model_version: str, input_data: dict) -> Dict[str, Any]:
         """Run inference using a model."""
         response = self.client.post(
-            f"{self.base_url}/models/{experiment_id}/infer",
+            f"{self.base_url}/models/{model_name}/{model_version}/infer",
             json=input_data,
             headers=self._get_json_headers()
         )
         response.raise_for_status()
         return response.json()
 
-    async def ainfer(self, experiment_id: str, input_data: dict) -> Dict[str, Any]:
+    async def ainfer(self, model_name: str, model_version: str, input_data: dict) -> Dict[str, Any]:
         """Async version of infer()"""
         response = await self.async_client.post(
-            f"{self.base_url}/models/{experiment_id}/infer",
+            f"{self.base_url}/models/{model_name}/{model_version}/infer",
             json=input_data,
             headers=self._get_json_headers()
         )
         response.raise_for_status()
         return response.json()
 
-    def batch_infer(self, experiment_id: str, inputs: List[dict]) -> List[Dict[str, Any]]:
+    def batch_infer(self, model_name: str, model_version: str, inputs: List[dict]) -> List[Dict[str, Any]]:
         """Run batch predictions."""
         async def run_batch():
             tasks = [
-                self.ainfer(experiment_id=experiment_id, input_data=x)
+                self.ainfer(model_name=model_name, model_version=model_version, input_data=x)
                 for x in inputs
             ]
             return await asyncio.gather(*tasks)
@@ -195,7 +192,7 @@ class PlexeAI:
     def cleanup_upload(self, upload_id: str) -> Dict[str, Any]:
         """Clean up uploaded files."""
         response = self.client.delete(
-            f"{self.base_url}/cleanup/{upload_id}",
+            f"{self.base_url}/uploads/{upload_id}",
             headers=self._get_headers()
         )
         response.raise_for_status()
@@ -204,7 +201,7 @@ class PlexeAI:
     async def acleanup_upload(self, upload_id: str) -> Dict[str, Any]:
         """Async version of cleanup_upload()"""
         response = await self.async_client.delete(
-            f"{self.base_url}/cleanup/{upload_id}",
+            f"{self.base_url}/uploads/{upload_id}",
             headers=self._get_headers()
         )
         response.raise_for_status()

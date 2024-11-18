@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "plexeai"
+name = "plexe"
 version = "0.1.0"
 description = "Create ML models from natural language descriptions"
 readme = "README.md"
@@ -30,7 +30,7 @@ python_files = ["test_*.py"]
 addopts = "-v --cov=plexeai --cov-report=term-missing"
 
 [tool.coverage.run]
-source = ["plexeai"]
+source = ["plexe"]
 omit = ["tests/*"]
 
 [tool.coverage.report]
@@ -44,5 +44,5 @@ exclude_lines = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/plexe-ai/plexe"
-Repository = "https://github.com/plexe-ai/plexe"
+Homepage = "https://github.com/plexe-ai/plexe-python"
+Repository = "https://github.com/plexe-ai/plexe-python"
