@@ -4,12 +4,25 @@ build-backend = "hatchling.build"
 
 [project]
 name = "plexe"
-version = "0.1.0"
+version = "0.1.1"
 description = "Create ML models from natural language descriptions"
 readme = "README.md"
 requires-python = ">=3.7"
 authors = [
     { name = "Plexe AI", email = "info@plexe.ai" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8", 
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
     "httpx>=0.24.0",

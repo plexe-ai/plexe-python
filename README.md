@@ -3,12 +3,12 @@
 # PlexeAI
 
 
-<img src="https://github.com/user-attachments/assets/872e6705-8b9c-4602-940b-2dfba19fe250" alt="PlexeAI Logo" width="100" height="100"/>
+<img src="docs/img/plexe-logo.svg" alt="PlexeAI Logo" width="100" height="100"/>
 
 ### Create ML models from natural language descriptions
 
-[![PyPI version](https://badge.fury.io/py/plexeai.svg)](https://badge.fury.io/py/plexeai)
-[![Python Versions](https://img.shields.io/pypi/pyversions/plexeai.svg)](https://pypi.org/project/plexe/)
+[![PyPI version](https://badge.fury.io/py/plexe.svg)](https://badge.fury.io/py/plexe)
+[![Python Versions](https://img.shields.io/pypi/pyversions/plexe.svg)](https://pypi.org/project/plexe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
