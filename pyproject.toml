@@ -27,7 +27,6 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --cov=plexeai --cov-report=term-missing"
 
 [tool.coverage.run]
 source = ["plexe"]
