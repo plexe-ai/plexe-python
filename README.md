@@ -1,50 +1,72 @@
-# Plexe
+# PlexeAI
 
-Create ML models from natural language descriptions.
+Create ML models from natural language descriptions. Upload your data and describe your ML problem - PlexeAI handles the rest.
 
-## Installation
+## Install
 
 ```bash
-pip install plexe
+pip install plexeai
 ```
 
 ## Usage
 
-First, set your API key:
-```bash
-export PLEXE_API_KEY=your_api_key_here
-```
-
-Then use it in your code:
-
 ```python
-import plexe
+import plexeai
 
-# Create a model
-model_id, version, desc = plexe.create(
-    "Create a model that predicts sentiment from text"
+# Set via environment or pass to functions
+# export PLEXE_API_KEY=your_api_key_here
+
+# Build a model
+experiment_id = plexeai.build(
+    goal="predict customer churn based on usage patterns",
+    data_files="customer_data.csv",  # Single file or list of files
+    steps=3  # Number of improvement iterations
 )
+
+# Check build status
+status = plexeai.get_status(experiment_id)
+# {"status": "completed", "result": {...}}
 
 # Make predictions
-result = plexe.run(
-    model_id=model_id,
-    text_input="This product is amazing!"
+result = plexeai.infer(
+    experiment_id=experiment_id,
+    input_data={
+        "usage": 100,
+        "tenure": 12,
+        "plan_type": "premium"
+    }
 )
-print(result)
 
 # Batch predictions
-results = plexe.batch_run(
-    model_id=model_id,
+results = plexeai.batch_infer(
+    experiment_id=experiment_id,
     inputs=[
-        {"text": "This is great"},
-        {"text": "This is terrible"}
+        {"usage": 100, "tenure": 12, "plan_type": "premium"},
+        {"usage": 50, "tenure": 6, "plan_type": "basic"}
     ]
 )
 
 # Async support
 async def main():
-    model_id, version, desc = await plexe.acreate(
-        "Create a classifier for text"
+    experiment_id = await plexeai.abuild(
+        goal="predict customer churn",
+        data_files="customer_data.csv"
     )
-    result = await plexe.arun(model_id, text_input="Test")
+    result = await plexeai.ainfer(
+        experiment_id=experiment_id,
+        input_data={"usage": 100, "tenure": 12}
+    )
 ```
+
+## Local Development
+
+```bash
+git clone https://github.com/plexe-ai/plexe
+cd plexe
+pip install -e ".[dev]"
+pytest
+```
+
+## License
+
+MIT License
