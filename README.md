@@ -7,7 +7,7 @@
 ### Create ML models from natural language descriptions
 
 [![PyPI version](https://badge.fury.io/py/plexeai.svg)](https://badge.fury.io/py/plexeai)
-[![Python Versions](https://img.shields.io/pypi/pyversions/plexeai.svg)](https://pypi.org/project/plexeai/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/plexeai.svg)](https://pypi.org/project/plexe/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
