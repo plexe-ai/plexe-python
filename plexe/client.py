@@ -5,14 +5,18 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 class PlexeAI:
-    def __init__(self, api_key: Optional[str] = None, timeout: float = 120.0):
+    def __init__(self, api_key: Optional[str] = None, base_url: str = "https://api.plexe.ai/v0", timeout: float = 120.0):
         self.api_key = api_key
         if not api_key:
             self.api_key = os.environ.get("PLEXE_API_KEY")
             if not self.api_key:
                 raise ValueError("PLEXE_API_KEY must be provided or set as environment variable")
+        if not base_url or not isinstance(base_url, str):
+            raise ValueError("base_url must be a non-empty string")
+        if not base_url.startswith("https://"):
+            raise ValueError("base_url must start with 'https://' as Plexe API requires HTTPS")
 
-        self.base_url = "https://api.plexe.ai/v0"
+        self.base_url = base_url
         self.client = httpx.Client(timeout=timeout)
         self.async_client = httpx.AsyncClient(timeout=timeout)
 
