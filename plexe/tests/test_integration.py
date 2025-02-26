@@ -68,6 +68,12 @@ class TestPlexeAIIntegration:
         assert client.api_key == API_KEY
         assert client.base_url == "https://api.plexe.ai/v0"
 
+    def test_client_initialization_with_baseurl(self):
+        """Test client initialization with custom base URL."""
+        client = PlexeAI(api_key=API_KEY, base_url="https://example.com")
+        assert client.api_key == API_KEY
+        assert client.base_url == "https://example.com"
+
     def test_build_and_inference_flow(self, client, sample_data_file, sample_input_data):
         """Test full flow: build model with direct data files to avoid timing issues."""
         try:
